@@ -189,30 +189,38 @@ module.exports = {
         });
 
         if (saveCookie) {
-          return res.status(200).json({
+          const result = res.status(200).json({
             success: 1,
             data: "login success",
             token,
           });
+
+          return result;
         }
 
-        return res.status(401).json({
+        const result = res.status(401).json({
           success: 0,
           data: "cookie error",
           token,
         });
+
+        return result;
       }
 
-      return res.status(401).json({
+      const result = res.status(401).json({
         success: 0,
         data: "Invalid Credentials",
       });
+
+      return result;
     }
 
-    return res.status(401).json({
+    const result = res.status(401).json({
       success: 0,
       data: "Invalid Credentials",
     });
+
+    return result;
   },
 
   logout: (req, res) => {

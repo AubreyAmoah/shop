@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  /* WebKit-based browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 6px; /* Narrow scrollbar */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1); /* Transparent scrollbar thumb */
+    border-radius: 10px; /* Optional: Round corners */
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent; /* Fully transparent track */
+  }
+
+  /* Firefox */
+  .scrollbar-thin {
+    scrollbar-width: thin; /* Thin scrollbar */
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent; /* Transparent thumb and track */
+  }
+
+  .gradient-placeholder::placeholder {
+    background: linear-gradient(to right, #229799, #48cfcb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; /* Makes the placeholder text take the gradient background */
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, #229799, #48cfcb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
