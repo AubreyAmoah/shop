@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  email    String    @unique
+  name     String?
+  password String
+  role     String    @default("admin")
+  created  DateTime
+  updated  DateTime?
+}
+
+model User {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  email    String    @unique
+  name     String?
+  password String
+  role     String    @default("user")
+  created  DateTime
+  updated  DateTime?
+}
+
+model Item {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String           @unique
+  colors         String[]
+  images         String[]
+  SizesAndPrices SizesAndPrices[]
+  category       Category         @relation(fields: [categoryId], references: [id])
+  categoryId     String           @db.ObjectId
+  created        DateTime
+  updated        DateTime?
+}
+
+model Category {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  image   String?
+  Item    Item[]
+  created DateTime
+  updated DateTime?
+}
+
+model SizesAndPrices {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  size    String?
+  price   Float
+  item    Item      @relation(fields: [itemId], references: [id])
+  itemId  String    @db.ObjectId
+  created DateTime
+  updated DateTime?
+}
