@@ -28,10 +28,10 @@ app.use(express.static(uploadDir));
 app.use(express.static(categoryDir));
 
 app.use("/api/auth", authRouter);
-// app.use("/api/admin", adminRouter);
+app.use("/api/admin", adminRouter);
 // app.use("/api/users", userRouter);
-// app.use("/api/items", itemRouter);
-// app.use("/api/categories", categoryRouter);
+app.use("/api/items", itemRouter);
+app.use("/api/categories", categoryRouter);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`Server up and running on port: ${process.env.APP_PORT}`);

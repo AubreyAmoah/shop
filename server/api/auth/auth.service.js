@@ -9,7 +9,6 @@ dotenv.config({ path: "./.env" });
 module.exports = {
   me: async (req, res) => {
     const decoded = req.decoded;
-    console.log(decoded);
     const user = decoded.payload.email;
     if (user) {
       res.status(200).json({ user: user });
