@@ -1,6 +1,7 @@
 import { faEdit, faListAlt } from "@fortawesome/free-regular-svg-icons";
 import {
   faDoorClosed,
+  faHome,
   faTools,
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
@@ -8,8 +9,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
+import { AuthContext } from "../AuthContext";
 
-const Sidebar = ({ open, handleLogout }) => {
+const Sidebar = ({ open, closeSidebar }) => {
+  const { logout } = React.useContext(AuthContext);
   return (
     <div
       className={`transition-all ${
@@ -18,6 +21,10 @@ const Sidebar = ({ open, handleLogout }) => {
           : "hidden"
       }`}
     >
+      <a href="/" className="flex gap-4 items-center text-2xl mb-8">
+        <FontAwesomeIcon className="text-[#229799ff]" icon={faHome} />{" "}
+        <p className="text-gradient">Home</p>
+      </a>
       <div className="flex flex-col gap-4 w-full p-2 mb-6 ">
         <h1 className="text-gradient text-2xl">Categories</h1>
         <a href="/createcategory" className="flex gap-4 items-center">
@@ -52,7 +59,13 @@ const Sidebar = ({ open, handleLogout }) => {
           <FontAwesomeIcon className="text-[#229799ff]" icon={faUserGroup} />{" "}
           <p className="text-gradient">Accounts</p>
         </a>
-        <button onClick={handleLogout} className="flex gap-4 items-center">
+        <button
+          onClick={() => {
+            logout();
+            closeSidebar();
+          }}
+          className="flex gap-4 items-center"
+        >
           <FontAwesomeIcon className="text-[#229799ff]" icon={faDoorClosed} />{" "}
           <p className="text-gradient">Logout</p>
         </button>

@@ -30,6 +30,6 @@ router.patch(
   uploadImage,
   updateCategoryImage
 );
-router.delete("/delete", checkTokenAndVerifyPermission, deleteCategory);
+router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteCategory);
 
 module.exports = router;

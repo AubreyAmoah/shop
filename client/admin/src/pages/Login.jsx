@@ -2,37 +2,19 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import toast from "react-hot-toast";
+import { AuthContext } from "../AuthContext";
 
-const Login = ({ session, loading, setLoading }) => {
+const Login = () => {
+  const { login, loading } = useContext(AuthContext);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const handleLogin = async () => {
-    if (loading === true) {
-      return toast.error("Not allowed");
-    }
-    if (!email || !password)
+    if (!email || !password) {
       return toast.error("Please fill out all the fields");
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:5500/api/auth/admin/signin",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-      console.log(response.data);
-      toast.success("Login Successful");
-      session();
-    } catch (err) {
-      console.log(err);
-      toast.error(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
     }
+    await login(email, password);
   };
   return (
     <div className="absolute top-16 left-0 bg-[#f5f5f5] max-[800px]:overflow-auto h-screen w-full">
@@ -70,7 +52,10 @@ const Login = ({ session, loading, setLoading }) => {
             }text-gradient border border-[#229799ff] w-[100px] p-2 ml-auto mr-auto mt-4`}
           >
             {loading ? (
-              <FontAwesomeIcon className="animate-spin" icon={faSpinner} />
+              <FontAwesomeIcon
+                className="animate-spin text-[#229799ff]"
+                icon={faSpinner}
+              />
             ) : (
               "Sign In"
             )}

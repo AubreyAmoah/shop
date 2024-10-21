@@ -1,8 +1,10 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { AuthContext } from "../AuthContext";
 
-const Navbar = ({ open, setOpen, user }) => {
+const Navbar = ({ open, setOpen }) => {
+  const { user } = React.useContext(AuthContext);
   const [visible, setVisible] = React.useState(false);
   const toggleOpen = () => {
     setOpen(!open);

@@ -131,7 +131,7 @@ module.exports = {
   },
 
   deleteCategory: async (req, res) => {
-    const { name } = req.body;
+    const { name } = req.params;
 
     try {
       // Find the category

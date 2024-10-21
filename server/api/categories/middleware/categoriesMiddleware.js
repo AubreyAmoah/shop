@@ -75,6 +75,7 @@ module.exports = {
           role: "admin",
         },
       });
+      console.log(userRole);
       if (!userRole)
         return res.status(401).json({ data: "User not permitted" });
       next();

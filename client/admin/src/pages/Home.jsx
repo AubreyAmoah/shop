@@ -8,8 +8,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { AuthContext } from "../AuthContext";
 
-const Home = ({ handleLogout, loading }) => {
+const Home = () => {
+  const { user, loading, logout } = React.useContext(AuthContext);
+
+  if (!user) {
+    return <p>You need to log in to access the dashboard</p>;
+  }
   return (
     <div className="absolute top-16 left-0 bg-[#f5f5f5] min-h-screen w-full">
       <h1 className="text-gradient text-2xl mb-6">Category</h1>
@@ -104,7 +110,7 @@ const Home = ({ handleLogout, loading }) => {
           </div>
         </a>
         <button
-          onClick={handleLogout}
+          onClick={logout}
           className={`bg-[#d9d9d9ff] shadow-md rounded-t-md text-center w-[200px] ml-auto mr-auto ${
             loading ? "disabled:cursor-not-allowed opacity-50" : ""
           } mr-auto max-[740px]:w-[160px] max-[740px]:h-[160px] max-[500px]:w-[120px] max-[500px]:h-[120px]`}

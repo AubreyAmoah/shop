@@ -11,75 +11,45 @@ import Login from "./pages/Login";
 import React from "react";
 import Home from "./pages/Home";
 import NoPage from "./pages/NoPage";
-import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import Profile from "./pages/Profile";
+import { AuthContext } from "./AuthContext";
+import CategoryCreate from "./pages/CategoryCreate";
+import ViewCategory from "./pages/ViewCategory";
+import ViewItems from "./pages/ViewItems";
+import ItemCreate from "./pages/ItemCreate";
 
 function App() {
-  const [user, setUser] = React.useState(false);
+  const { user } = React.useContext(AuthContext);
   const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
 
   const closeSideBar = () => {
     setOpen(false);
   };
-
-  const verifySession = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5500/api/auth/verify",
-        { withCredentials: true }
-      );
-      if (response.status === 200) setUser(true);
-    } catch (error) {
-      console.error(error);
-      setUser(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    if (loading === true) {
-      return;
-    }
-    setLoading(true);
-    try {
-      await axios.get("http://localhost:5500/api/auth/logout", {
-        withCredentials: true,
-      });
-      toast.success("Logout success");
-      closeSideBar();
-      verifySession();
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  React.useState(() => {
-    verifySession();
-  }, []);
   return (
     <div className="relative scrollbar-thin">
       <Toaster />
       <Navbar open={open} setOpen={setOpen} user={user} />
-      <Sidebar open={open} user={user} handleLogout={handleLogout} />
+      <Sidebar open={open} closeSidebar={closeSideBar} />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={user ? <Home /> : <Login />} />
+          <Route path="/setting" element={user ? <Profile /> : <Login />} />
           <Route
-            path="/"
-            element={
-              user === false ? (
-                <Login
-                  session={verifySession}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              ) : (
-                <Home loading={loading} handleLogout={handleLogout} />
-              )
-            }
+            path="/createcategory"
+            element={user ? <CategoryCreate /> : <Login />}
           />
+
+          <Route
+            path="/viewcategories"
+            element={user ? <ViewCategory /> : <Login />}
+          />
+
+          <Route
+            path="/createitem"
+            element={user ? <ItemCreate /> : <Login />}
+          />
+          <Route path="/viewitems" element={user ? <ViewItems /> : <Login />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
