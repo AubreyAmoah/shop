@@ -138,7 +138,9 @@ const ItemCreate = () => {
         }
 
         const formData = new FormData();
-        formData.append("files", files);
+        files.forEach((file) => {
+          formData.append("files", file);
+        });
 
         try {
           const response = await axios.patch(
@@ -279,7 +281,7 @@ const ItemCreate = () => {
           htmlFor="file"
           className="cursor-pointer ml-auto mr-auto shadow-md max-[550px]:w-full"
         >
-          <div className="bg-[#d9d9d9ff] w-[400px] h-[300px] text-[#999999ff] text-2xl flex flex-col items-center justify-center gap-4 max-[550px]:w-full">
+          <div className="relative bg-[#d9d9d9ff] w-[400px] h-[300px] text-[#999999ff] text-2xl flex flex-col items-center justify-center gap-4 max-[550px]:w-full">
             {selectedImages.length > 0 ? (
               // Show the carousel if there are images
               <>

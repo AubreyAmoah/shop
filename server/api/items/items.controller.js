@@ -17,7 +17,7 @@ const {
 
 const router = require("express").Router();
 
-router.get("/getitem", getItem);
+router.get("/:name", getItem);
 router.get("/getitems", getItems);
 router.post("/", inputValidation, checkTokenAndVerifyPermission, addItem);
 router.put("/:id", checkTokenAndVerifyPermission, updateItem);

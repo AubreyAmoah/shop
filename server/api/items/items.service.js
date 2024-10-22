@@ -171,12 +171,13 @@ module.exports = {
   },
   getItem: async (req, res) => {
     try {
-      const { name } = req.body;
-      const item = await prisma.item.findUnique({
+      const { name } = req.params;
+      const item = await prisma.item.findFirst({
         where: {
           name,
         },
         include: {
+          category: true,
           SizesAndPrices: true,
         },
       });
@@ -229,7 +230,7 @@ module.exports = {
   updateItem: async (req, res) => {
     const { id } = req.params;
     try {
-      const { name, colors, sizeprice, category } = req.body;
+      const { name, sizeprice, category } = req.body;
 
       // Find the item to update
       const existingItem = await prisma.item.findUnique({
@@ -251,7 +252,6 @@ module.exports = {
 
       const data = {
         name: name ?? existingItem.name,
-        colors: colors ?? existingItem.colors,
         updated: new Date(Date.now()),
         ...(category && {
           categoryId: (
@@ -274,15 +274,18 @@ module.exports = {
         });
 
         // Re-create the SizesAndPrices
-        const sizesAndPricesPromises = sizeprice.map(({ size, price }) => {
-          return prisma.sizesAndPrices.create({
-            data: {
-              size,
-              price: parseFloat(price), // Ensure price is stored as a Float
-              itemId: updatedItem.id, // Link to the updated item
-            },
-          });
-        });
+        const sizesAndPricesPromises = sizeprice.map(
+          ({ size, price, color }) => {
+            return prisma.sizesAndPrices.create({
+              data: {
+                size: size.toLowerCase(),
+                color: color.toLowerCase(),
+                price: parseFloat(price), // Ensure price is stored as a Float
+                itemId: updatedItem.id, // Link to the updated item
+              },
+            });
+          }
+        );
 
         // Wait for all sizes and prices to be updated
         await Promise.all(sizesAndPricesPromises);
