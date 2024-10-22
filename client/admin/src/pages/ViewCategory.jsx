@@ -1,34 +1,9 @@
-import { faSpinner, faUpload } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React from "react";
-import toast from "react-hot-toast";
 import { AuthContext } from "../AuthContext";
-import { globalUrl } from "../globals";
 
 const ViewCategory = () => {
-  const { loading, setLoading } = React.useContext(AuthContext);
-  const [categories, setCategories] = React.useState([]);
+  const { loading, setLoading, categories } = React.useContext(AuthContext);
 
-  const getCategories = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${globalUrl}/api/categories/all`, {
-        withCredentials: true,
-      });
-      setCategories(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response?.data?.error || error.response?.data?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    getCategories();
-  }, []);
   return (
     <div className="absolute top-16 left-0 bg-[#f5f5f5] min-h-screen w-full">
       <h1 className="text-gradient text-2xl mb-6">Categories</h1>

@@ -1,22 +1,21 @@
 const { PrismaClient } = require("@prisma/client");
 const dotenv = require("dotenv");
-const { json } = require("express");
 
 const prisma = new PrismaClient();
 
 dotenv.config({ path: "./.env" });
 module.exports = {
   addImages: async (req, res) => {
-    const { id } = req.params;
+    const { name } = req.params;
     let fileURLs = [];
     for (let i = 0; i < req.files.length; i++) {
       let url = `${req.protocol}://${req.get("host")}/${req.files[i].filename}`;
       fileURLs.push(url);
     }
 
-    const existingItem = await prisma.item.findUnique({
+    const existingItem = await prisma.item.findFirst({
       where: {
-        id,
+        name,
       },
     });
 
@@ -116,7 +115,7 @@ module.exports = {
   },
   addItem: async (req, res) => {
     try {
-      const { name, colors, sizeprice, category } = req.body;
+      const { name, sizeprice, category } = req.body;
 
       const item = await prisma.item.findUnique({
         where: {
@@ -137,23 +136,26 @@ module.exports = {
 
       const newItem = await prisma.item.create({
         data: {
-          name,
-          colors,
+          name: name.toLowerCase(),
           category: { connect: { id: findCategory.id } },
           created: new Date(Date.now()),
         },
       });
 
-      const sizesAndPricesPromises = sizeprice.map(({ size, price }) => {
-        return prisma.sizesAndPrices.create({
-          data: {
-            size,
-            price: parseFloat(price),
-            itemId: newItem.id,
-            created: new Date(Date.now()),
-          },
-        });
-      });
+      const sizesAndPricesPromises = sizeprice.map(
+        ({ size, price, stock, color }) => {
+          return prisma.sizesAndPrices.create({
+            data: {
+              size: size.toLowerCase(),
+              price: parseFloat(price),
+              stock: Number(stock),
+              color: color.toLowerCase(),
+              created: new Date(Date.now()),
+              item: { connect: { id: newItem.id } },
+            },
+          });
+        }
+      );
 
       await Promise.all(sizesAndPricesPromises);
 
@@ -191,11 +193,11 @@ module.exports = {
   },
   getItems: async (req, res) => {
     try {
-      const users = await prisma.item.findMany({
+      const items = await prisma.item.findMany({
         include: { SizesAndPrices: true },
       });
 
-      return res.status(200).json(users);
+      return res.status(200).json(items);
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -205,7 +207,25 @@ module.exports = {
       });
     }
   },
+  getItemsByCategory: async (req, res) => {
+    const { categoryId } = req.body;
+    try {
+      const items = await prisma.item.findMany({
+        where: {
+          categoryId,
+        },
+        include: { SizesAndPrices: true },
+      });
 
+      return res.status(200).json(items);
+    } catch (error) {
+      return res.status(500).json({
+        success: 0,
+        message: "An error ocurred",
+        data: error,
+      });
+    }
+  },
   updateItem: async (req, res) => {
     const { id } = req.params;
     try {
@@ -282,7 +302,7 @@ module.exports = {
   },
 
   deleteItem: async (req, res) => {
-    const { name } = req.body;
+    const { name } = req.params;
     try {
       // Check if the item exists
       const existingItem = await prisma.item.findFirst({

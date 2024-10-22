@@ -58,7 +58,7 @@ module.exports = {
           email,
         },
         data: {
-          name,
+          name: name.toLocaleLowerCase(),
           updated: new Date(Date.now()),
         },
       });

@@ -1,12 +1,10 @@
-import {
-  faSpinner,
-  faUpload,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../AuthContext";
+import { globalUrl } from "../globals";
 const CategoryCreate = () => {
   const { loading, setLoading } = React.useContext(AuthContext);
   const [categoryName, setCategoryName] = React.useState("");
@@ -17,7 +15,7 @@ const CategoryCreate = () => {
     setLoading(true);
     try {
       const response = await axios.delete(
-        `http://localhost:5500/api/categories/delete/${name}`,
+        `${globalUrl}/api/categories/delete/${name}`,
         { withCredentials: true }
       );
       toast.success("Deleted!!");
@@ -34,7 +32,7 @@ const CategoryCreate = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5500/api/categories/",
+        `${globalUrl}/api/categories/`,
         { name: categoryName },
         { withCredentials: true }
       );
@@ -50,7 +48,7 @@ const CategoryCreate = () => {
 
         try {
           const response = await axios.patch(
-            `http://localhost:5500/api/categories/addimage/${categoryName}`,
+            `${globalUrl}/api/categories/addimage/${categoryName}`,
             formData,
             {
               headers: {

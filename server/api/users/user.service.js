@@ -1,0 +1,94 @@
+const { PrismaClient } = require("@prisma/client");
+const dotenv = require("dotenv");
+const argon = require("argon2");
+
+const prisma = new PrismaClient();
+
+dotenv.config({ path: "./.env" });
+module.exports = {
+  me: async (req, res) => {
+    const decoded = req.decoded;
+    const email = decoded.payload.email;
+
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      delete user.password;
+
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(500).json({
+        success: 0,
+        data: error,
+      });
+    }
+  },
+
+  updateDetails: async (req, res) => {
+    try {
+      const decoded = req.decoded;
+      const email = decoded.payload.email;
+
+      const { name } = req.body;
+
+      if (!name) return res.status(401).json({ message: "please give a name" });
+
+      await prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          name: name.toLocaleLowerCase(),
+          updated: new Date(Date.now()),
+        },
+      });
+
+      return res.status(201).json({ message: "update successful" });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+
+  changePassword: async (req, res) => {
+    try {
+      const decoded = req.decoded;
+      const email = decoded.payload.email;
+      const { newPassword, oldPassword } = req.body;
+
+      if (!newPassword || !oldPassword)
+        return res.status(401).json({ message: "field cannot be empty" });
+
+      const user = await prisma.user.findFirst({
+        where: {
+          email,
+        },
+      });
+
+      if (!user) return res.status(401).json({ message: "user not found" });
+
+      const comparePassword = await argon.verify(user.password, oldPassword);
+
+      if (!comparePassword)
+        return res.status(400).json({ message: "Invalid credentials" });
+
+      const hash = await argon.hash(newPassword);
+
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          password: hash,
+        },
+      });
+
+      return res.status(200).json({ message: "Password Changed" });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+};

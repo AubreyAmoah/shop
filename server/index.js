@@ -13,6 +13,7 @@ const adminRouter = require("./api/admin/admin.controller.js");
 const userRouter = require("./api/users/user.controller.js");
 const itemRouter = require("./api/items/items.controller.js");
 const categoryRouter = require("./api/categories/category.controller.js");
+const cartRouter = require("./api/cart/cart.controller.js");
 
 dotenv.config({ path: "./.env" });
 
@@ -29,9 +30,10 @@ app.use(express.static(categoryDir));
 
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
-// app.use("/api/users", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/items", itemRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/cart", cartRouter);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`Server up and running on port: ${process.env.APP_PORT}`);

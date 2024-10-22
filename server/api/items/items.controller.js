@@ -35,6 +35,6 @@ router.patch(
 );
 router.patch("/", checkTokenAndVerifyPermission, updateItem);
 router.patch("/deleteimage/", checkTokenAndVerifyPermission, removeImage);
-router.delete("/delete", checkTokenAndVerifyPermission, deleteItem)
+router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteItem)
 
 module.exports = router;

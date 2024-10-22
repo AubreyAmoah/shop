@@ -61,7 +61,7 @@ const Home = () => {
           />
 
           <div className=" rounded-b-md bg-white p-4 text-center max-[740px]:p-2 max-[740px]:text-sm max-[500px]:text-xs">
-            <p className="text-gradient font-bold">Create Category</p>
+            <p className="text-gradient font-bold">Create Item</p>
           </div>
         </a>
         <a
@@ -74,7 +74,7 @@ const Home = () => {
           />
 
           <div className=" rounded-b-md bg-white p-4 text-center max-[740px]:p-2 max-[740px]:text-sm max-[500px]:text-xs">
-            <p className="text-gradient font-bold">View Categories</p>
+            <p className="text-gradient font-bold">View Items</p>
           </div>
         </a>
       </div>
