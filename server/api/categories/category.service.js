@@ -72,6 +72,7 @@ module.exports = {
         where: {
           name,
         },
+        include: { Item: true },
       });
 
       return res.status(200).json(category);
@@ -86,7 +87,9 @@ module.exports = {
   },
   getCatgories: async (req, res) => {
     try {
-      const categories = await prisma.category.findMany();
+      const categories = await prisma.category.findMany({
+        include: { Item: true },
+      });
 
       return res.status(200).json(categories);
     } catch (error) {

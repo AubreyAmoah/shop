@@ -7,6 +7,7 @@ const {
   removeImage,
   addImages,
   deleteItem,
+  getItemsByCategory,
 } = require("./items.service");
 const {
   uploadImages,
@@ -17,8 +18,7 @@ const {
 
 const router = require("express").Router();
 
-router.get("/:name", getItem);
-router.get("/getitems", getItems);
+router.get("/all", getItems);
 router.post("/", inputValidation, checkTokenAndVerifyPermission, addItem);
 router.put("/:id", checkTokenAndVerifyPermission, updateItem);
 router.patch(
@@ -34,7 +34,8 @@ router.patch(
   appendImages
 );
 router.patch("/", checkTokenAndVerifyPermission, updateItem);
+router.get("/category/item/:categoryId", getItemsByCategory);
 router.patch("/deleteimage/", checkTokenAndVerifyPermission, removeImage);
-router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteItem)
-
+router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteItem);
+router.get("/item/:name", getItem);
 module.exports = router;

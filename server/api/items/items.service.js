@@ -209,7 +209,7 @@ module.exports = {
     }
   },
   getItemsByCategory: async (req, res) => {
-    const { categoryId } = req.body;
+    const { categoryId } = req.params;
     try {
       const items = await prisma.item.findMany({
         where: {

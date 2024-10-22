@@ -61,7 +61,7 @@ model SizesAndPrices {
   size    String?
   price   Float
   color   String?
-  stock   Int       
+  stock   Int
   item    Item      @relation(fields: [itemId], references: [id])
   itemId  String    @db.ObjectId
   created DateTime
@@ -69,15 +69,17 @@ model SizesAndPrices {
 }
 
 model CartItem {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  item    String
-  images  String[]
-  size    String
-  price   Float
-  color   String
-  owner   User     @relation(fields: [userId], references: [id])
-  created DateTime
-  userId  String   @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  item       String
+  images     String[]
+  size       String
+  price      Float
+  color      String
+  quantity   Int      @default(0)
+  totalPrice Float    @default(0.0)
+  owner      User     @relation(fields: [userId], references: [id])
+  created    DateTime
+  userId     String   @db.ObjectId
 }
 
 model FavoriteItem {
@@ -93,10 +95,26 @@ model FavoriteItem {
 }
 
 model Purchase {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  itemCount Int
-  totalCost Float
-  created   DateTime
-  owner     User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String         @db.ObjectId
+  items         PurchaseItem[] // List of purchased items (relation to a separate PurchaseItem model)
+  totalQuantity Int // Total number of items in the purchase
+  totalPrice    Float // Total cost of the purchase
+  paymentMethod String? // Optional: Payment method used (e.g., card, PayPal, etc.)
+  status        String         @default("pending") // Status of the order (e.g., pending, completed, canceled)
+  created       DateTime       @default(now()) // Timestamp when the purchase was made
+  updated       DateTime? // Optional: Timestamp for when the purchase status was updated
+}
+
+model PurchaseItem {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId String   @db.ObjectId
+  itemName   String // Name of the purchased item
+  size       String // Size of the item (optional)
+  color      String // Color of the item (optional)
+  price      Float // Price of the item at the time of purchase
+  quantity   Int // Quantity purchased
+  totalCost  Float // Total cost for this item (price * quantity)
 }
