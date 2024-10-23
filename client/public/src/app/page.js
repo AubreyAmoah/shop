@@ -60,7 +60,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {purchaseHistory?.purchaseHistory.map((order) => (
+            {purchaseHistory?.purchaseHistory?.map((order) => (
               <tr key={order?.id} className="border-t">
                 <td className="px-4 py-2">{order?.id}</td>
                 <td className="px-4 py-2">{order?.paymentMethod}</td>
