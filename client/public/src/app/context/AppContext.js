@@ -237,9 +237,11 @@ export const AppProvider = ({ children }) => {
       toast.success("Login successful");
       console.log(response);
       checkSession();
-      getAllItems();
-      getCartItems();
-      getPurchaseHistory();
+      if (user) {
+        getAllItems();
+        getCartItems();
+        getPurchaseHistory();
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Login failed");
