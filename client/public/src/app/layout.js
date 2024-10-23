@@ -1,5 +1,11 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { AppProvider } from "./context/AppContext";
+import AuthForm from "./pages/auth/auth";
+import SideBar from "./components/SideBar";
+import Navbar from "./components/Navbar";
+import { Toaster } from "react-hot-toast";
+import ClientWrapper from "./ClientWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,11 +26,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <AppProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Toaster />
+          <ClientWrapper>{children}</ClientWrapper>
+        </body>
+      </AppProvider>
     </html>
   );
 }

@@ -5,6 +5,7 @@ const {
   reduceCartItem,
   removeCartItem,
   purchaseCartItems,
+  getPurchaseHistory,
 } = require("./cart.service");
 
 const router = require("express").Router();
@@ -14,5 +15,6 @@ router.post("/", checkToken, addCartItem);
 router.patch("/removeone", checkToken, reduceCartItem);
 router.patch("/removeall", checkToken, removeCartItem);
 router.post("/purchase", checkToken, purchaseCartItems);
+router.get("/purchasehistory", checkToken, getPurchaseHistory);
 
 module.exports = router;

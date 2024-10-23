@@ -341,4 +341,59 @@ module.exports = {
       });
     }
   },
+  getPurchaseHistory: async (req, res) => {
+    const email = req.decoded.payload.email;
+
+    try {
+      // 1. Fetch the user
+      const user = await prisma.user.findFirst({
+        where: { email },
+      });
+
+      if (!user) return res.status(400).json({ message: "User not found" });
+
+      // 2. Fetch the user's purchase history
+      const purchaseHistory = await prisma.purchase.findMany({
+        where: { userId: user.id },
+        include: {
+          items: true, // Include the related purchase items
+        },
+        orderBy: {
+          created: "desc", // Sort by the most recent purchases first
+        },
+      });
+
+      if (purchaseHistory.length === 0) {
+        return res.status(200).json({ message: "No purchase history found" });
+      }
+
+      // 3. Calculate total amount spent and total items purchased
+      const totalAmountSpent = purchaseHistory.reduce((total, purchase) => {
+        return total + purchase.totalPrice;
+      }, 0);
+
+      const totalItemsPurchased = purchaseHistory.reduce((total, purchase) => {
+        const itemsInPurchase = purchase.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        return total + itemsInPurchase;
+      }, 0);
+
+      // 4. Return the purchase history along with total amount spent and total items purchased
+      return res.status(200).json({
+        message: "Purchase history retrieved successfully",
+        totalAmountSpent,
+        totalItemsPurchased,
+        purchaseHistory,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: 0,
+        message: "An error occurred while retrieving purchase history",
+        data: error.message,
+      });
+    }
+  },
 };
