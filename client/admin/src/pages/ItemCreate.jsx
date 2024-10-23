@@ -143,7 +143,7 @@ const ItemCreate = () => {
         });
 
         try {
-          const response = await axios.patch(
+          const response = await axios.post(
             `${globalUrl}/api/items/addimages/${itemName}`,
             formData,
             {

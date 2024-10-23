@@ -15,6 +15,7 @@ export const AppProvider = ({ children }) => {
   const [categoryItems, setCategoryItems] = React.useState([]);
   const [item, setItem] = React.useState({});
   const [cartItems, setCartItems] = React.useState([]);
+  const [purchaseHistory, setPurchaseHistory] = React.useState([]);
 
   const getCategories = async () => {
     setLoading(true);
@@ -130,6 +131,7 @@ export const AppProvider = ({ children }) => {
       console.log(response);
       getAllItems();
       getCartItems();
+      getPurchaseHistory();
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.error || error.response?.data?.message);
@@ -160,12 +162,37 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const getPurchaseHistory = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${globalUrl}/api/cart/purchasehistory`,
+        {
+          withCredentials: true,
+        }
+      );
+      setPurchaseHistory(response.data);
+      getAllItems();
+      getCartItems();
+      getPurchaseHistory();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.error || error.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const purchaseCartItems = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${globalUrl}/api/cart/purchase`, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${globalUrl}/api/cart/purchase`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
       toast.success(`purchase succesful`);
       console.log(response);
       getAllItems();
@@ -210,6 +237,9 @@ export const AppProvider = ({ children }) => {
       toast.success("Login successful");
       console.log(response);
       checkSession();
+      getAllItems();
+      getCartItems();
+      getPurchaseHistory();
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Login failed");
@@ -253,7 +283,7 @@ export const AppProvider = ({ children }) => {
     checkSession();
     getAllItems();
     getCartItems();
-    console.log(cartItems);
+    getPurchaseHistory();
   }, []);
 
   return (
@@ -270,6 +300,8 @@ export const AppProvider = ({ children }) => {
         items,
         cartItems,
         categoryItems,
+        purchaseHistory,
+        getPurchaseHistory,
         getAllItems,
         getCartItems,
         getCategories,

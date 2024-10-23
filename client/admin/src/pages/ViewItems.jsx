@@ -17,7 +17,7 @@ const ViewItems = () => {
   const getItems = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${globalUrl}/api/items/getitems`, {
+      const response = await axios.get(`${globalUrl}/api/items/all`, {
         withCredentials: true,
       });
       setItems(response.data);

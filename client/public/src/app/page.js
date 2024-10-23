@@ -3,21 +3,23 @@ import { AppContext } from "./context/AppContext";
 import React from "react";
 
 export default function Home() {
-  const { user, logout } = React.useContext(AppContext);
+  const { user, logout, purchaseHistory } = React.useContext(AppContext);
   return (
     <div>
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Orders Card */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold">Total Orders</h3>
-          <p className="mt-2 text-3xl font-bold">1,240</p>
+          <h3 className="text-lg font-semibold">Total Purchases</h3>
+          <p className="mt-2 text-3xl font-bold">
+            {purchaseHistory?.totalItemsPurchased}
+          </p>
           <p className="text-green-500 mt-1">+5% from last month</p>
         </div>
 
-        {/* Revenue Card */}
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold">Revenue</h3>
-          <p className="mt-2 text-3xl font-bold">$50,430</p>
+          <h3 className="text-lg font-semibold">Total Amount Spent</h3>
+          <p className="mt-2 text-3xl font-bold">
+            GHS{purchaseHistory?.totalAmountSpent}
+          </p>
           <p className="text-green-500 mt-1">+8% from last month</p>
         </div>
 
@@ -30,7 +32,7 @@ export default function Home() {
 
         {/* Customers Card */}
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold">Customers</h3>
+          <h3 className="text-lg font-semibold">Users</h3>
           <p className="mt-2 text-3xl font-bold">2,380</p>
           <p className="text-green-500 mt-1">+6% from last month</p>
         </div>
@@ -38,7 +40,8 @@ export default function Home() {
 
       {/* Order Table */}
       <div className="mt-10 bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold mb-4">Recent Orders</h3>
+        <h3 className="text-lg font-semibold mb-4">Recent Purchases</h3>
+
         <table className="min-w-full table-auto">
           <thead>
             <tr>
@@ -46,7 +49,7 @@ export default function Home() {
                 Order ID
               </th>
               <th className="px-4 py-2 text-left text-sm font-medium">
-                Customer
+                PaymentMethod
               </th>
               <th className="px-4 py-2 text-left text-sm font-medium">
                 Amount
@@ -57,24 +60,22 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-t">
-              <td className="px-4 py-2">#12345</td>
-              <td className="px-4 py-2">John Doe</td>
-              <td className="px-4 py-2">$500</td>
-              <td className="px-4 py-2 text-green-500">Completed</td>
-            </tr>
-            <tr className="border-t">
-              <td className="px-4 py-2">#12346</td>
-              <td className="px-4 py-2">Jane Smith</td>
-              <td className="px-4 py-2">$250</td>
-              <td className="px-4 py-2 text-yellow-500">Pending</td>
-            </tr>
-            <tr className="border-t">
-              <td className="px-4 py-2">#12347</td>
-              <td className="px-4 py-2">Mike Johnson</td>
-              <td className="px-4 py-2">$350</td>
-              <td className="px-4 py-2 text-red-500">Cancelled</td>
-            </tr>
+            {purchaseHistory?.purchaseHistory.map((order) => (
+              <tr key={order?.id} className="border-t">
+                <td className="px-4 py-2">{order?.id}</td>
+                <td className="px-4 py-2">{order?.paymentMethod}</td>
+                <td className="px-4 py-2">{order?.totalPrice}</td>
+                <td
+                  className={`px-4 py-2 ${
+                    order?.status === "pending"
+                      ? "text-yellow-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {order?.status}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

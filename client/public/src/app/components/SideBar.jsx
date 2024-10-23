@@ -32,13 +32,6 @@ const SideBar = () => {
             >
               Cart
             </Link>
-            <Link
-              href="/pages/orders"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-            >
-              Orders
-            </Link>
-      
           </nav>
         </div>
       </aside>
@@ -92,12 +85,6 @@ const SideBar = () => {
             className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
           >
             Cart
-          </Link>
-          <Link
-            href="/pages/orders"
-            className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-          >
-            Orders
           </Link>
         </nav>
       </aside>

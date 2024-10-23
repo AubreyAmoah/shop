@@ -21,7 +21,7 @@ const router = require("express").Router();
 router.get("/all", getItems);
 router.post("/", inputValidation, checkTokenAndVerifyPermission, addItem);
 router.put("/:id", checkTokenAndVerifyPermission, updateItem);
-router.patch(
+router.post(
   "/addimages/:id",
   checkTokenAndVerifyPermission,
   uploadImages,

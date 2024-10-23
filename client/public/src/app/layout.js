@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <AppProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
         >
           <Toaster />
           <ClientWrapper>{children}</ClientWrapper>

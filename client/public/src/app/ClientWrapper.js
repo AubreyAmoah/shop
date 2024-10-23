@@ -13,7 +13,7 @@ export default function ClientWrapper({ children }) {
   return (
     <>
       {user ? (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex bg-gray-100">
           <SideBar />
 
           <div className="flex-1 bg-gray-100 p-6">

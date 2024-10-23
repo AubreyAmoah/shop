@@ -1,9 +1,11 @@
 "use client";
 import { AppContext } from "@/app/context/AppContext";
+import { faBasketShopping, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 export default function Shop() {
-  const { items, addCartItem } = React.useContext(AppContext);
+  const { items, addCartItem, loading } = React.useContext(AppContext);
 
   return (
     <div className="p-6">
@@ -11,7 +13,10 @@ export default function Shop() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {items.map((item, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md max-[400px]:p-2">
+          <div
+            key={index}
+            className="bg-white p-6 rounded-lg shadow-md max-[400px]:p-2"
+          >
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold">{item?.name}</h3>
             </div>
@@ -36,6 +41,7 @@ export default function Shop() {
                     </p>
                   </div>
                   <button
+                    disabled={loading ? true : false}
                     onClick={() =>
                       addCartItem(
                         item?.name,
@@ -47,7 +53,16 @@ export default function Shop() {
                     }
                     className="text-white p-2 bg-teal-600 border-none shadow-sm text-sm rounded-sm mt-2"
                   >
-                    Add to cart
+                    {loading ? (
+                      <FontAwesomeIcon
+                        className="animate-spin"
+                        icon={faSpinner}
+                      />
+                    ) : (
+                      <span>
+                        <FontAwesomeIcon icon={faBasketShopping} /> add to cart
+                      </span>
+                    )}
                   </button>
                 </div>
               ))}

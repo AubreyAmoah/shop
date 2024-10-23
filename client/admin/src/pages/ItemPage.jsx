@@ -46,7 +46,7 @@ const ItemPage = () => {
   React.useEffect(() => {
     const fetchItemDetails = async () => {
       try {
-        const response = await axios.get(`${globalUrl}/api/items/${name}`, {
+        const response = await axios.get(`${globalUrl}/api/items/item/${name}`, {
           withCredentials: true,
         });
         setItemData(response.data);

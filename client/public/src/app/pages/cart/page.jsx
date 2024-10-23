@@ -1,10 +1,12 @@
 // src/pages/cart/Cart.js
 "use client";
 import { AppContext } from "@/app/context/AppContext";
+import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 export default function Cart() {
-  const { cartItems, purchaseCartItems, loading } =
+  const { cartItems, purchaseCartItems, loading, reduceCartItem } =
     React.useContext(AppContext);
 
   // Calculate total amount
@@ -40,7 +42,24 @@ export default function Cart() {
                   <td className="px-4 py-2">{item.size}</td>
                   <td className="px-4 py-2">{item.color}</td>
                   <td className="px-4 py-2">{item.quantity}</td>
-                  <td className="px-4 py-2">${item.totalPrice.toFixed(2)}</td>
+                  <td className="px-4 py-2">GHS{item.totalPrice.toFixed(2)}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() =>
+                        reduceCartItem(
+                          item?.name,
+                          item?.size,
+                          item?.price,
+                          item?.color
+                        )
+                      }
+                    >
+                      <FontAwesomeIcon
+                        className="text-red-500"
+                        icon={faMinus}
+                      />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -48,7 +67,7 @@ export default function Cart() {
 
           <div className="mt-4">
             <h2 className="text-xl font-semibold">
-              Total: ${totalAmount.toFixed(2)}
+              Total: GHS{totalAmount.toFixed(2)}
             </h2>
             <button
               onClick={purchaseCartItems}
