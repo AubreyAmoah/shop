@@ -9,6 +9,7 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "https://shopclient2024.vercel.app/",
   "https://shopadmin2024.netlify.app/",
+  "https://shop-y73n.onrender.com",
 ];
 
 module.exports = allowedOrigins;

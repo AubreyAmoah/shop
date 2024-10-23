@@ -10,7 +10,7 @@ export default function Home() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold">Total Purchases</h3>
           <p className="mt-2 text-3xl font-bold">
-            {purchaseHistory?.totalItemsPurchased}
+            {purchaseHistory?.totalItemsPurchased || 0}
           </p>
           <p className="text-green-500 mt-1">+5% from last month</p>
         </div>
@@ -18,7 +18,7 @@ export default function Home() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold">Total Amount Spent</h3>
           <p className="mt-2 text-3xl font-bold">
-            GHS{purchaseHistory?.totalAmountSpent}
+            GHS{purchaseHistory?.totalAmountSpent || 0}
           </p>
           <p className="text-green-500 mt-1">+8% from last month</p>
         </div>
