@@ -1,1 +1,1 @@
-export const globalUrl = 'http://localhost:5500'
+export const globalUrl = "https://shop-y73n.onrender.com";

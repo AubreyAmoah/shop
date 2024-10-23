@@ -5,6 +5,7 @@ import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../AuthContext";
+import { globalUrl } from "../globals";
 
 const Profile = () => {
   const { user, checkSession, loading } = React.useContext(AuthContext);
@@ -17,7 +18,7 @@ const Profile = () => {
     if (!newName) return toast.error("Provide valid characters");
     try {
       const response = await axios.patch(
-        "http://localhost:5500/api/admin/update",
+        `${globalUrl}/api/admin/update`,
         { name: newName },
         { withCredentials: true }
       );
@@ -36,7 +37,7 @@ const Profile = () => {
       return toast.error("Provide valid characters");
     try {
       const response = await axios.patch(
-        "http://localhost:5500/api/admin/changepassword",
+        `${globalUrl}/api/admin/changepassword`,
         { oldPassword, newPassword },
         { withCredentials: true }
       );
