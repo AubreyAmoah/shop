@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const globalUrl = "http://localhost:5500";
+const globalUrl = "https://shop-y73n.onrender.com";
 
 export const AppContext = createContext();
 
