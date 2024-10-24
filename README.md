@@ -67,7 +67,7 @@ shop/
    ```
 
 ## Usage
-- Visit the admin dashboard at `http://localhost:3000/admin`
+- Visit the admin dashboard at `http://localhost:3000`
 - Visit the public e-commerce site at `http://localhost:3000`
 
 ## Contributing
