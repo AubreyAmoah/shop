@@ -3,6 +3,7 @@ import {
   faUpload,
   faArrowLeft,
   faArrowRight,
+  faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -20,7 +21,9 @@ const ItemPage = () => {
   const [file, setFile] = useState(null);
   const [itemName, setItemName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [sizeprice, setSizeprice] = useState([{ size: "", price: "", color: "" }]);
+  const [sizeprice, setSizeprice] = useState([
+    { size: "", price: "", color: "" },
+  ]);
 
   const handlePrevImage = () => {
     setCurrentIndex((prevIndex) =>
@@ -61,7 +64,9 @@ const ItemPage = () => {
       setItemData(response.data);
       setItemName(response.data.name);
       setSelectedCategory(response.data.category?.name);
-      setSizeprice(response.data.SizesAndPrices || [{ size: "", price: "", color: "" }]);
+      setSizeprice(
+        response.data.SizesAndPrices || [{ size: "", price: "", color: "" }]
+      );
     } catch (err) {
       console.error("Error fetching item data", err);
     } finally {
@@ -78,14 +83,61 @@ const ItemPage = () => {
         sizeprice,
       };
 
-      await axios.put(`${globalUrl}/api/items/update/${itemData.id}`, updatedData, {
-        withCredentials: true,
-      });
+      await axios.put(
+        `${globalUrl}/api/items/update/${itemData.id}`,
+        updatedData,
+        {
+          withCredentials: true,
+        }
+      );
 
       alert("Item updated successfully");
     } catch (error) {
       console.error("Error updating item:", error);
       alert("Failed to update item");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle appending a new image
+  const handleAppendImage = async () => {
+    if (!file) return;
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await axios.post(
+        `${globalUrl}/api/items/${itemData.id}/appendImage`,
+        formData,
+        { withCredentials: true }
+      );
+      setFile(null);
+      setSelectedImage(null);
+      fetchItemDetails(); // Refresh item data after appending
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle image removal
+  const handleRemoveImage = async (imageUrl) => {
+    setLoading(true);
+    try {
+      await axios.put(
+        `${globalUrl}/api/items/removeImage`,
+        {
+          name: itemData.name,
+          imagesToRemove: [imageUrl],
+        },
+        { withCredentials: true }
+      );
+      fetchItemDetails(); // Refresh item data after removal
+    } catch (error) {
+      console.error("Error removing image:", error);
     } finally {
       setLoading(false);
     }
@@ -148,11 +200,16 @@ const ItemPage = () => {
         </div>
 
         {sizeprice.map((data, index) => (
-          <div key={index} className="flex justify-center items-center gap-4 w-full p-2 max-[600px]:flex-col">
+          <div
+            key={index}
+            className="flex justify-center items-center gap-4 w-full p-2 max-[600px]:flex-col"
+          >
             <span>
               Price:
               <input
-                onChange={(e) => handleSizePriceChange(index, "price", e.target.value)}
+                onChange={(e) =>
+                  handleSizePriceChange(index, "price", e.target.value)
+                }
                 className="px-4 py-2 mb-2 rounded-sm bg-[#d9d9d9ff] caret-[#229799] text-[#229799ff] gradient-placeholder focus:outline focus:outline-[#48cfcb] w-40 max-[600px]:w-full"
                 type="text"
                 placeholder={`GHS ${data.price}`}
@@ -162,7 +219,9 @@ const ItemPage = () => {
             <span>
               Size:
               <input
-                onChange={(e) => handleSizePriceChange(index, "size", e.target.value)}
+                onChange={(e) =>
+                  handleSizePriceChange(index, "size", e.target.value)
+                }
                 className="px-4 py-2 mb-2 rounded-sm bg-[#d9d9d9ff] caret-[#229799] text-[#229799ff] gradient-placeholder focus:outline focus:outline-[#48cfcb] w-20 max-[600px]:w-full"
                 type="text"
                 placeholder={data.size}
@@ -172,13 +231,48 @@ const ItemPage = () => {
             <span>
               Color:
               <input
-                onChange={(e) => handleSizePriceChange(index, "color", e.target.value)}
+                onChange={(e) =>
+                  handleSizePriceChange(index, "color", e.target.value)
+                }
                 className="px-4 py-2 mb-2 rounded-sm bg-[#d9d9d9ff] caret-[#229799] text-[#229799ff] gradient-placeholder focus:outline focus:outline-[#48cfcb] w-40 max-[600px]:w-full"
                 type="text"
                 placeholder={data.color}
                 value={data.color}
               />
             </span>
+          </div>
+        ))}
+        <div className="flex w-full items-center justify-center">
+          {loading ? (
+            <FontAwesomeIcon
+              className="mt-6 mb-6 px-4 py-2 text-[#229799ff] ml-10 text-xl animate-spin"
+              icon={faSpinner}
+            />
+          ) : (
+            <button
+              onClick={handleUpdateItem}
+              className="mt-6 mb-6 border border-[#229799ff] px-4 py-2 text-[#229799ff]"
+            >
+              Update Item
+            </button>
+          )}
+        </div>
+        <h2 className="mt-4">Images</h2>
+
+        {/* Render Delete Button for Each Image */}
+        {itemData?.images?.map((image, index) => (
+          <div key={index} className="flex flex-col items-center mt-2">
+            <img
+              src={image}
+              alt={`Image ${index + 1}`}
+              className="object-cover h-32 w-32 shadow-md mb-2"
+            />
+            <button
+              onClick={() => handleRemoveImage(image)}
+              className="text-red-500 hover:text-red-700"
+            >
+              <FontAwesomeIcon icon={faTrashAlt} /> Remove Image
+            </button>
           </div>
         ))}
 
@@ -211,22 +305,16 @@ const ItemPage = () => {
             accept=".jpg,.jpeg,.webp,.png"
             onChange={handleFileChange}
           />
-        </div>
-
-        <div className="flex w-full items-center justify-center">
-          {loading ? (
-            <FontAwesomeIcon
-              className="mt-6 mb-6 px-4 py-2 text-[#229799ff] ml-10 text-xl animate-spin"
-              icon={faSpinner}
-            />
-          ) : (
-            <button
-              onClick={handleUpdateItem}
-              className="mt-6 mb-6 border border-[#229799ff] px-4 py-2 text-[#229799ff]"
-            >
-              Update Item
-            </button>
-          )}
+          <button
+            onClick={handleAppendImage}
+            className="mt-4 mb-6 border border-[#229799ff] px-4 py-2 text-[#229799ff]"
+          >
+            {loading ? (
+              <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+            ) : (
+              "Add image"
+            )}
+          </button>
         </div>
       </div>
     </div>

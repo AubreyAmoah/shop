@@ -35,7 +35,7 @@ router.patch(
 );
 // router.patch("/", checkTokenAndVerifyPermission, updateItem);
 router.get("/category/item/:categoryId", getItemsByCategory);
-router.patch("/removeImage/", checkTokenAndVerifyPermission, removeImage);
+router.put("/removeImage", checkTokenAndVerifyPermission, removeImage);
 router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteItem);
 router.get("/item/:name", getItem);
 module.exports = router;
