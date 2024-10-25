@@ -13,25 +13,21 @@ const CategoryPage = () => {
   const [newName, setNewName] = useState(""); // New state for category name update
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
-
+  const fetchCategoryDetails = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${globalUrl}/api/categories/${name}`, {
+        withCredentials: true,
+      });
+      setCategoryData(response.data);
+      setNewName(response.data.name); // Set initial name
+    } catch (err) {
+      console.error("Error fetching category data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchCategoryDetails = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `${globalUrl}/api/categories/${name}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setCategoryData(response.data);
-        setNewName(response.data.name); // Set initial name
-      } catch (err) {
-        console.error("Error fetching category data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCategoryDetails();
   }, [name]);
 
