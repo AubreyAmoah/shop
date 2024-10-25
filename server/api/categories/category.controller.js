@@ -15,7 +15,7 @@ const {
 
 const router = require("express").Router();
 
-router.get("/single", getCategory);
+router.get("/:name", getCategory);
 router.get("/all", getCatgories);
 router.post("/", checkTokenAndVerifyPermission, inputValidation, addCategory);
 router.patch(
