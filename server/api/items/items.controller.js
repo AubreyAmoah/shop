@@ -20,7 +20,7 @@ const router = require("express").Router();
 
 router.get("/all", getItems);
 router.post("/", inputValidation, checkTokenAndVerifyPermission, addItem);
-router.put("/:id", checkTokenAndVerifyPermission, updateItem);
+router.put("/update/:id", checkTokenAndVerifyPermission, updateItem);
 router.post(
   "/addimages/:id",
   checkTokenAndVerifyPermission,
@@ -35,7 +35,7 @@ router.patch(
 );
 router.patch("/", checkTokenAndVerifyPermission, updateItem);
 router.get("/category/item/:categoryId", getItemsByCategory);
-router.patch("/deleteimage/", checkTokenAndVerifyPermission, removeImage);
+router.patch("/removeImage/", checkTokenAndVerifyPermission, removeImage);
 router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteItem);
 router.get("/item/:name", getItem);
 module.exports = router;
