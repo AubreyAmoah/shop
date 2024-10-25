@@ -111,7 +111,7 @@ const ItemPage = () => {
 
     try {
       await axios.post(
-        `${globalUrl}/api/items/${itemData.id}/appendImage`,
+        `${globalUrl}/api/items/appendImage/${itemData.id}`,
         formData,
         { withCredentials: true }
       );
