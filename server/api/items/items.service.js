@@ -38,7 +38,7 @@ module.exports = {
     }
   },
   appendImages: async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.body;
     const url = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
 
     try {
