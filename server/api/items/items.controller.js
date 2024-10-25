@@ -33,7 +33,7 @@ router.patch(
   uploadImage,
   appendImages
 );
-router.patch("/", checkTokenAndVerifyPermission, updateItem);
+// router.patch("/", checkTokenAndVerifyPermission, updateItem);
 router.get("/category/item/:categoryId", getItemsByCategory);
 router.patch("/removeImage/", checkTokenAndVerifyPermission, removeImage);
 router.delete("/delete/:name", checkTokenAndVerifyPermission, deleteItem);

@@ -273,13 +273,15 @@ module.exports = {
 
         // Re-create the SizesAndPrices
         const sizesAndPricesPromises = sizeprice.map(
-          ({ size, price, color }) => {
+          ({ size, price, color, stock }) => {
             return prisma.sizesAndPrices.create({
               data: {
                 size: size.toLowerCase(),
                 color: color.toLowerCase(),
-                price: parseFloat(price), // Ensure price is stored as a Float
-                itemId: updatedItem.id, // Link to the updated item
+                price: parseFloat(price),
+                stock: Number(stock),
+                itemId: updatedItem.id,
+                updated: new Date(Date.now()),
               },
             });
           }
