@@ -29,10 +29,27 @@ const ViewItems = () => {
     }
   };
 
+  const deleteItem = async (name) => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(
+        `${globalUrl}/api/items/delete/${name}`,
+        { withCredentials: true }
+      );
+      toast.success("Deleted!!");
+      console.log("Delete success", response.data);
+      getItems();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.error || error.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
     getItems();
-    console.log(items);
-  }, [items]);
+  }, []);
   return (
     <div className="absolute top-16 left-0 bg-[#f5f5f5] min-h-screen w-full">
       <h1 className="text-gradient text-2xl mb-6">Items</h1>
@@ -54,8 +71,19 @@ const ViewItems = () => {
                 >
                   More Details
                 </a>
-                <button className="text-red-600 h-8">
-                  <FontAwesomeIcon icon={faTrash} />
+                <button
+                  disabled={loading ? true : false}
+                  onClick={() => deleteItem(item.name)}
+                  className="text-red-600 h-8"
+                >
+                  {loading ? (
+                    <FontAwesomeIcon
+                      className="text-[#229799ff] animate-spin"
+                      icon={faSpinner}
+                    />
+                  ) : (
+                    <FontAwesomeIcon icon={faTrash} />
+                  )}
                 </button>
               </div>
             </div>

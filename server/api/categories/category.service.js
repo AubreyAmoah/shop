@@ -67,7 +67,7 @@ module.exports = {
   },
   getCategory: async (req, res) => {
     try {
-      const { name } = req.body;
+      const { name } = req.params;
       const category = await prisma.category.findFirst({
         where: {
           name,

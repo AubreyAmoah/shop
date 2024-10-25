@@ -1,11 +1,45 @@
 import React from "react";
 import { AuthContext } from "../AuthContext";
+import {
+  faSpinner,
+  faTrash,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { globalUrl } from "../globals";
 
 const ViewCategory = () => {
-  const { loading, setLoading, categories } = React.useContext(AuthContext);
-
+  const { loading, setLoading, categories, getCategories } =
+    React.useContext(AuthContext);
+  const deleteCategory = async (name) => {
+    if (
+      window.confirm(
+        "Do you want to proceed?"
+      )
+    ) {
+      setLoading(true);
+      try {
+        const response = await axios.delete(
+          `${globalUrl}/api/categories/delete/${name}`,
+          { withCredentials: true }
+        );
+        toast.success("Deleted!!");
+        console.log("Delete success", response.data);
+        getCategories();
+      } catch (error) {
+        console.log(error);
+        toast.error(
+          error.response?.data?.error || error.response?.data?.message
+        );
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      return;
+    }
+  };
   return (
     <div className="absolute top-16 left-0 bg-[#f5f5f5] min-h-screen w-full">
       <h1 className="text-gradient text-2xl mb-6">Categories</h1>
@@ -25,13 +59,24 @@ const ViewCategory = () => {
               <div className="flex gap-2 items-center max-[400px]:flex-col">
                 <span className="text-gradient font-bold">{category.name}</span>
                 <a
-                  href="#"
+                  href={`/category/${category.name}`}
                   className={`text-gradient border border-[#229799ff] p-2 text-sm max-[400px]:text-xs`}
                 >
                   More Details
                 </a>
-                <button className="text-red-600 h-8">
-                  <FontAwesomeIcon icon={faTrash} />
+                <button
+                  onClick={() => deleteCategory(category.name)}
+                  disabled={loading ? true : false}
+                  className="text-red-600 h-8"
+                >
+                  {loading ? (
+                    <FontAwesomeIcon
+                      className="text-[#229799ff] animate-spin"
+                      icon={faSpinner}
+                    />
+                  ) : (
+                    <FontAwesomeIcon icon={faTrash} />
+                  )}
                 </button>
               </div>
             </div>
