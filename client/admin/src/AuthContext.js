@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const getCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${globalUrl}/api/categories/all`, {
+      const response = await axios.get(`${globalUrl}/api/categories/all/categories`, {
         withCredentials: true,
       });
       setCategories(response.data);

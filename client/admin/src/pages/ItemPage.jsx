@@ -60,7 +60,7 @@ const ItemPage = () => {
 
     fetchItemDetails();
     setItemName(itemData?.name);
-    setSelectedCategory(itemData?.category.name);
+    setSelectedCategory(itemData?.category?.name);
   }, [name]);
   return (
     <div className="absolute top-16 left-0 bg-[#f5f5f5] min-h-screen w-full">

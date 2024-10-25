@@ -19,6 +19,7 @@ import ViewCategory from "./pages/ViewCategory";
 import ViewItems from "./pages/ViewItems";
 import ItemCreate from "./pages/ItemCreate";
 import ItemPage from "./pages/ItemPage";
+import CategoryPage from "./pages/CategoryPage";
 
 function App() {
   const { user } = React.useContext(AuthContext);
@@ -52,6 +53,10 @@ function App() {
           />
           <Route path="/viewitems" element={user ? <ViewItems /> : <Login />} />
           <Route path="/item/:name" element={user ? <ItemPage /> : <Login />} />
+          <Route
+            path="/category/:name"
+            element={user ? <CategoryPage /> : <Login />}
+          />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

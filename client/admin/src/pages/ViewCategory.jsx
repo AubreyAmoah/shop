@@ -46,7 +46,7 @@ const ViewCategory = () => {
 
       <div className="grid grid-cols-3 grid-rows-1 gap-4 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
         {categories ? (
-          categories.map((category) => (
+          categories?.map((category) => (
             <div
               key={category.id}
               className="flex items-center p-4 gap-4 text-xl"
