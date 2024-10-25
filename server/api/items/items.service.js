@@ -39,37 +39,36 @@ module.exports = {
   },
   appendImages: async (req, res) => {
     const { id } = req.params;
-
-    let url = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+    const url = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
 
     try {
+      // Validate ID as an integer for Prisma
+      const itemId = parseInt(id);
+      if (isNaN(itemId)) {
+        return res.status(400).json({ data: "Invalid item ID format" });
+      }
+
       // Fetch the existing item
       const existingItem = await prisma.item.findUnique({
-        where: {
-          id, // Ensure the id is passed as a number
-        },
+        where: { id: itemId },
       });
 
       if (!existingItem) {
-        return res.status(401).json({ data: "Item not found" });
+        return res.status(404).json({ data: "Item not found" });
       }
 
-      // Append new URLs to the existing itemImages
-      const updatedImages = [...existingItem.itemImages, url];
+      // Append new URL to existing images array
+      const updatedImages = [...(existingItem.images || []), url];
 
-      // Update the item with the combined images
+      // Update the item
       await prisma.item.update({
-        where: {
-          id: existingItem.id,
-        },
-        data: {
-          itemImages: updatedImages, // Update with the appended array
-        },
+        where: { id: itemId },
+        data: { images: updatedImages },
       });
 
-      return res.status(200).json({ data: "New Images uploaded" });
+      return res.status(200).json({ data: "New image appended successfully" });
     } catch (error) {
-      console.error(error);
+      console.error("Error appending image:", error);
       return res.status(500).json({ data: "An error occurred" });
     }
   },
@@ -77,39 +76,38 @@ module.exports = {
     const { name, imagesToRemove } = req.body;
 
     try {
+      // Validate that imagesToRemove is an array
+      if (!Array.isArray(imagesToRemove) || imagesToRemove.length === 0) {
+        return res.status(400).json({ error: "Invalid image(s) to remove" });
+      }
+
+      // Find the item by name
       const existingItem = await prisma.item.findUnique({
-        where: {
-          name,
-        },
+        where: { name },
       });
 
       if (!existingItem) {
         return res.status(404).json({ data: "Item not found" });
       }
 
-      if (!existingItem.images.includes(imagesToRemove)) {
-        return res
-          .status(400)
-          .json({ error: "Image does not exist in the database" });
-      }
-
-      // Filter out the image to remove
+      // Filter out images to be removed
       const updatedImages = existingItem.images.filter(
-        (image) => image !== imagesToRemove
+        (image) => !imagesToRemove.includes(image)
       );
 
-      // Update the item with the new images array
-      const updatedItem = await prisma.item.update({
+      if (updatedImages.length === existingItem.images.length) {
+        return res.status(400).json({ error: "None of the images matched" });
+      }
+
+      // Update item with the remaining images
+      await prisma.item.update({
         where: { id: existingItem.id },
-        data: {
-          images: updatedImages,
-          updated: new Date(Date.now()),
-        },
+        data: { images: updatedImages, updated: new Date() },
       });
 
       return res.status(200).json({ data: "Images removed successfully" });
     } catch (error) {
-      console.error(error);
+      console.error("Error removing image:", error);
       return res.status(500).json({ data: "An error occurred" });
     }
   },
