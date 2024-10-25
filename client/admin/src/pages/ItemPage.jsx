@@ -104,18 +104,18 @@ const ItemPage = () => {
               className={`px-4 py-2 mb-2 rounded-sm bg-[#d9d9d9ff] caret-[#229799] text-[#229799ff] gradient-placeholder focus:outline focus:outline-[#48cfcb] w-40 max-[600px]:w-full`}
             >
               <option value={selectedCategory}>{selectedCategory}</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
+              {categories?.map((category) => (
+                <option key={category?.id} value={category?.name}>
+                  {category?.name}
                 </option>
               ))}
             </select>
           </span>
         </div>
 
-        {itemData?.SizesAndPrices.map((data) => (
+        {itemData?.SizesAndPrices?.map((data) => (
           <>
-            <h2 className="mt-4" key={data.id}>
+            <h2 className="mt-4" key={data?.id}>
               Available Types
             </h2>
             <div className="flex justify-center items-center gap-4 w-full p-2 max-[600px]:flex-col">

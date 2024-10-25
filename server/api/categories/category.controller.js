@@ -15,8 +15,7 @@ const {
 
 const router = require("express").Router();
 
-router.get("/:name", getCategory);
-router.get("/all", getCatgories);
+router.get("/all/categories", getCatgories);
 router.post("/", checkTokenAndVerifyPermission, inputValidation, addCategory);
 router.patch(
   "/",
@@ -24,6 +23,7 @@ router.patch(
   updateValidation,
   updateCategory
 );
+router.get("/:name", getCategory);
 router.patch(
   "/addimage/:name",
   checkTokenAndVerifyPermission,
