@@ -28,7 +28,7 @@ router.post(
   addImages
 );
 router.patch(
-  "/appendImage",
+  "/:id/appendImage",
   checkTokenAndVerifyPermission,
   uploadImage,
   appendImages
